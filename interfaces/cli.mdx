@@ -1,59 +1,59 @@
 ---
 title: "CLI"
-description: "Install ulysses-cli, sign in, and operate your workspace from the terminal."
+description: "Install ulysses-cli, sign in, and work with your workspace from the terminal."
 ---
 
-The Ulysses CLI talks to the same authenticated workspaces as [app.tryulysses.com](https://app.tryulysses.com). Use it for scripts, CI, and agent workflows.
+The Ulysses CLI works against the same workspace as the [web app](https://app.tryulysses.com). Use it for scripts, automation, and AI agents.
 
 ## Install
 
 ```bash
 curl -fsSL https://install.tryulysses.com/cli | sh
-```
-
-```bash
 ulysses-cli --version
-ulysses-cli update
 ```
 
-The installer ensures [uv](https://docs.astral.sh/uv/) is available, downloads the signed wheel from `install.tryulysses.com`, verifies SHA-256 and the release signature, then puts `ulysses-cli` on your `PATH`.
+The installer adds [uv](https://docs.astral.sh/uv/) if it's missing, downloads the signed release from `install.tryulysses.com`, verifies its SHA-256 checksum and signature, and puts `ulysses-cli` on your `PATH`.
 
-## Sign up
-
-New accounts start with a personal workspace. Signup emails a browser setup link—you never pass a password on the CLI.
-
-```bash
-ulysses-cli auth signup --email you@example.com
-```
-
-Optional: `--first-name`, `--last-name`, and `--env` (`production` default, `staging`, or `local`).
-
-Finish the link in the browser to create the workspace, then run `auth login`. Until that link is completed, there is no tenant to sign into.
-
-<Note>
-  A success response means the auth host accepted the request. It does **not** confirm that a workspace was created, and it does **not** reveal whether the email is already registered. Local responses may include a `setupUrl`; deployed responses do not.
-</Note>
-
-If you were invited to an organization, you already have an account—skip signup and use `auth login`.
+Update with `ulysses-cli update`.
 
 ## Sign in
+
+If you were invited to an organization, you already have an account:
 
 ```bash
 ulysses-cli auth login
 ulysses-cli auth whoami
 ```
 
-Device login opens in the browser. Do not pass a password. Optional environment: `--env production` (default), `staging`, or `local`. Named profiles: `--profile <name>`. Switch workspaces with `auth contexts` and `auth use <tenant-id>`.
+Device login opens in your browser. Never pass a password to the CLI.
 
-Tokens live in the OS keychain when available; profile metadata is in `~/.ulysses/config`. Revoke with `auth logout` or from **Settings → Devices** in the app.
+- Choose an environment with `--env production` (default), `staging`, or `local`.
+- Use named profiles with `--profile <name>`.
+- Switch workspaces with `auth contexts`, then `auth use <tenant-id>`.
 
-## Invoke
+Tokens are stored in your OS keychain when available. Profile settings live in `~/.ulysses/config`. Sign out with `auth logout`, or revoke a device in the web app under **Settings → Devices**.
+
+### Sign up without an invitation
+
+New accounts start with a personal workspace. Signup emails you a setup link:
+
+```bash
+ulysses-cli auth signup --email you@example.com
+```
+
+Optional flags: `--first-name`, `--last-name`, and `--env`. Finish setup in your browser, then run `auth login`. You can't sign in until setup is complete.
+
+<Note>
+  A success response means the request was accepted. It doesn't confirm that a workspace was created, and it doesn't reveal whether the email is already registered.
+</Note>
+
+## Run a command
 
 ```bash
 ulysses-cli [--output json|human] <resource> <action>
 ```
 
-`--output` must come before the subcommand. A terminal defaults to human output; pipes default to JSON. Bare `ulysses-cli` prints the command tree.
+`--output` must come before the resource. Output is human-readable in a terminal and JSON when piped. Run `ulysses-cli` on its own to see every command.
 
 ## Commands
 
@@ -61,52 +61,47 @@ ulysses-cli [--output json|human] <resource> <action>
 
 | Command | What it does |
 | --- | --- |
-| `auth signup --email <address>` | Email a setup link (finish in browser, then login) |
-| `auth login [--env …] [--profile <name>]` | Device login |
-| `auth whoami` | Principal and active profile |
-| `auth contexts` / `auth use <tenant-id>` | List / activate workspaces |
-| `auth sessions` / `auth revoke <session-id>` | Device grants |
-| `auth logout [--all]` | Sign out |
+| `auth signup --email <address>` | Email a setup link. |
+| `auth login [--env …] [--profile <name>]` | Sign in with device login. |
+| `auth whoami` | Show who you're signed in as and the active profile. |
+| `auth contexts` / `auth use <tenant-id>` | List workspaces / switch workspace. |
+| `auth sessions` / `auth revoke <session-id>` | List / revoke device sessions. |
+| `auth logout [--all]` | Sign out. |
 
 ### Team
 
-Requires an active workspace (`auth use <tenant-id>`). Invite / update / remove need the tenant **admin** role.
+These commands need an active workspace. Inviting, updating, and removing teammates require the workspace **admin** role.
 
 | Command | What it does |
 | --- | --- |
-| `users list [--limit N]` / `show <user-id>` | Teammates in the active workspace |
-| `users invite --email <address> [--role member\|admin]` | Email an invite |
-| `users update <user-id> [--role …] [--status ACTIVE\|DEACTIVATED]` | Change role and/or status (pass at least one flag) |
-| `users remove <user-id>` | Remove a teammate |
-
-Take user IDs from `users list`. Do not invent them.
+| `users list [--limit N]` / `users show <user-id>` | List / show teammates. |
+| `users invite --email <address> [--role member\|admin]` | Email an invitation. |
+| `users update <user-id> [--role …] [--status ACTIVE\|DEACTIVATED]` | Change a teammate's role or status. Pass at least one flag. |
+| `users remove <user-id>` | Remove a teammate. |
 
 ### Portfolio
 
 | Command | What it does |
 | --- | --- |
-| `organizations list` / `show` | Organizations in the active tenant |
-| `projects list` / `show` / `create` / `update` | Projects (writes need `project:write`) |
-| `matches show <project-id>` | Stored opportunity matches |
-| `opportunities list` / `show` | Funding opportunities |
-| `awards list` / `show` | Awards |
-| `activity list` | Recent activity |
-| `links resolve <kind> <id>` | Web URL (`project`, `opportunity`, or `award`) |
+| `organizations list` / `show` | Organizations in the workspace. |
+| `projects list` / `show` / `create` / `update` | Projects. Creating and updating require `project:write`. |
+| `matches show <project-id>` | Stored opportunity matches for a project. |
+| `opportunities list` / `show` | Funding opportunities. |
+| `awards list` / `show` | Awards. |
+| `activity list` | Recent activity. |
+| `links resolve <kind> <id>` | Web app URL for a `project`, `opportunity`, or `award`. |
 
-Take show IDs from a list result. Do not invent them.
+Get IDs from a `list` command. Don't guess them.
 
-## Agents and scripts
+## Scripts and AI agents
 
-Prefer JSON and treat the envelope as the contract:
+Use JSON output and treat the response envelope as the contract:
 
 ```bash
 ulysses-cli --output json projects list --limit 50
 ```
 
-Success responses include `ok: true` and `result`. Failures include `ok: false`, `error`, and often `next_actions`. Stop on failure. Prefer reads unless the user asked for a write. Do not print access or refresh tokens.
-
-## Guides
-
-- [Quickstart](/quickstart)
-- [Create a project](/guides/create-a-project)
-- [Match opportunities](/guides/match-opportunities)
+- Successful responses include `ok: true` and `result`.
+- Failures include `ok: false`, `error`, and often `next_actions`. Stop on failure.
+- Prefer read commands unless a write was explicitly requested.
+- Never print access or refresh tokens.

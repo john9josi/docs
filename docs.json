@@ -32,16 +32,10 @@
       {
         "group": "Get started",
         "pages": [
-          "index",
+          "introduction",
           "quickstart",
-          "use-cases/overview"
-        ]
-      },
-      {
-        "group": "Interfaces",
-        "pages": [
-          "interfaces/cli",
-          "interfaces/mcp"
+          "use-cases/overview",
+          "roadmap"
         ]
       },
       {
@@ -56,6 +50,14 @@
           "guides/overview",
           "guides/create-a-project",
           "guides/match-opportunities"
+        ]
+      },
+      {
+        "group": "Interfaces",
+        "pages": [
+          "interfaces/web-app",
+          "interfaces/cli",
+          "interfaces/mcp"
         ]
       }
     ]

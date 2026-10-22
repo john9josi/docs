@@ -1,57 +1,76 @@
 ---
 title: "Match opportunities"
-description: "Inspect stored opportunity matches for a project from the CLI."
+description: "See which funding opportunities Ulysses has matched to a project."
 ---
 
-See which funding opportunities Ulysses has already scored for a project. The CLI reads the latest stored snapshot—it does not rescore from the terminal.
+Ulysses scores funding opportunities against each project or program and stores the results.
 
-## Prerequisites
+## Before you start
 
-- CLI installed and signed in
-- A project ID from `projects list` or `projects show`
+- You're signed in. See the [Quickstart](/quickstart).
 
-## 1. Find the project
+<Tabs>
+  <Tab title="Web app">
+    <Steps>
+      <Step title="Open the project">
+        In [app.tryulysses.com](https://app.tryulysses.com), go to **Projects** and open the one you want. You can also find projects from **Discover**.
+      </Step>
+      <Step title="View matched opportunities">
+        Open the **Opportunities** tab on the project. Each match shows a score and the reasons behind it.
 
-```bash
-ulysses-cli --output json projects list --limit 50
-```
+        <Note>
+          No matches yet? The project hasn't been scored. This isn't an error — check back after the next scoring run.
+        </Note>
+      </Step>
+      <Step title="Open an opportunity">
+        Select a match to see the full NOFO and decide whether to pursue it. You can also browse every opportunity from **Discover**.
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="CLI">
+    This reads stored matches. It doesn't rescore.
 
-Copy the `projectId` you care about.
+    <Steps>
+      <Step title="Find the project">
+        ```bash
+        ulysses-cli --output json projects list --limit 50
+        ```
 
-## 2. Show matches
+        Copy the `projectId` of the project you want.
+      </Step>
+      <Step title="Show its matches">
+        ```bash
+        ulysses-cli --output json matches show <project-id>
+        ```
 
-```bash
-ulysses-cli --output json matches show <project-id>
-```
+        The result includes `projectId`, `scoredAt`, and a list of `matches`. `--limit` caps the number of matches returned (default 50).
 
-The result includes `projectId`, `scoredAt`, and `matches`. Each match has:
+        | Field | Meaning |
+        | --- | --- |
+        | `opportunityId` | The ID to pass to `opportunities show`. |
+        | `opportunityName` | The opportunity's name. |
+        | `score` | Numeric match score. |
+        | `band` | `Strong`, `Moderate`, or `Weak`. |
+        | `rationale` | Why it matched. |
+        | `factors` | The factors behind the score. |
 
-| Field | Meaning |
-| --- | --- |
-| `opportunityId` | ID to pass to `opportunities show` |
-| `opportunityName` | Display name |
-| `score` | Numeric score |
-| `band` | `Strong`, `Moderate`, or `Weak` |
-| `rationale` | Why it matched |
-| `factors` | Contributing factors |
+        <Note>
+          If `matches` is empty and `scoredAt` is null, the project hasn't been scored yet. This isn't an error.
+        </Note>
+      </Step>
+      <Step title="Open an opportunity">
+        ```bash
+        ulysses-cli --output json opportunities show <opportunity-id>
+        ulysses-cli --output json links resolve opportunity <opportunity-id>
+        ```
 
-`--limit` caps rows in the envelope (default 50).
+        Open `result.url` to view the opportunity in the web app.
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
 
-<Note>
-  An empty `matches` list with `scoredAt` null means that project has no stored snapshot yet. That is a successful read, not an error.
-</Note>
+## Next steps
 
-## 3. Open a matched opportunity
-
-```bash
-ulysses-cli --output json opportunities show <opportunity-id>
-ulysses-cli --output json links resolve opportunity <opportunity-id>
-```
-
-Copy `result.url` to open the record in the app.
-
-## What's next
-
-- [Create a project](/guides/create-a-project)
-- [CLI](/interfaces/cli)
-- [Use cases](/use-cases/overview)
+- [Create a project or program](/guides/create-a-project).
+- See every command in the [CLI reference](/interfaces/cli).

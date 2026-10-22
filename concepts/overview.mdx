@@ -1,59 +1,86 @@
 ---
 title: "Core concepts"
-description: "Workspaces, projects, opportunities, and awards—the vocabulary behind Ulysses."
+description: "Workspaces, projects, opportunities, awards, and the data that connects them."
 ---
 
-Ulysses organizes funding work around a small set of records. Knowing these terms makes the app, CLI, and docs easier to navigate.
+Projects and programs are the work and services that get funded. Opportunities are funding you could pursue for that work, and awards are funding you've won. Connections and datasets bring in data from outside Ulysses. Everything lives in your workspace.
 
 ## Workspace
 
-A **workspace** (tenant) is the security and data boundary for your organization. Sign-in and CLI profiles are always attached to one active workspace. Switch with `ulysses-cli auth contexts` and `ulysses-cli auth use <tenant-id>`, or in the app if you belong to more than one.
+Your **workspace** is your agency's account in Ulysses, and the boundary for its data and access. It holds your team, user permissions, and department-level access. Everything you see belongs to the active workspace.
+
+<Accordion title="From the CLI">
+  ```bash
+  ulysses-cli auth contexts
+  ulysses-cli auth use <tenant-id>
+  ```
+</Accordion>
 
 ## Organizations
 
-Within a workspace, **organizations** represent the agencies or entities your team works with. List them with `ulysses-cli organizations list` or open them in the app.
+**Organizations** are the agencies and entities your workspace works with.
 
-## Projects
+<Accordion title="From the CLI">
+  ```bash
+  ulysses-cli organizations list
+  ```
+</Accordion>
 
-**Projects** are capital projects and public programs you track—the work that needs funding. Each project can carry identifiers (for example federal, state, or CIP numbers) and status fields your team updates over time.
+## Projects and programs
 
-```bash
-ulysses-cli projects list
-ulysses-cli projects show <project-id>
-```
+**Projects and programs** are the capital work and public services you track. Each one has a department, budget, dates, links, funding status, and a capital stack: the mix of funding sources paying for it. Projects and programs can also carry federal, state, and CIP identifiers.
+
+<Accordion title="From the CLI">
+  ```bash
+  ulysses-cli projects list
+  ulysses-cli projects show <project-id>
+  ```
+</Accordion>
 
 ## Opportunities
 
-**Opportunities** are funding opportunities you can discover, filter, and match to projects.
+**Opportunities** are federal and state Notices of Funding Opportunity (NOFOs). Ulysses scores opportunities against your projects and programs and stores the matches. Each match has a score and the reasons behind it.
 
-```bash
-ulysses-cli opportunities list
-ulysses-cli matches show <project-id>
-```
+<Accordion title="From the CLI">
+  ```bash
+  ulysses-cli opportunities list
+  ulysses-cli matches show <project-id>
+  ```
+</Accordion>
 
 ## Awards
 
-**Awards** are funded awards tied to the work they support. They are how the portfolio answers “what is paying for this?”
+**Awards** are funding you've won, tied to the projects and programs they pay for. Ulysses tracks each award's lifecycle, including obligations, drawdowns, reimbursements, and clawback warnings. Awards can be added by hand or from a sync.
 
-```bash
-ulysses-cli awards list
-ulysses-cli awards show <award-id>
-```
+<Accordion title="From the CLI">
+  ```bash
+  ulysses-cli awards list
+  ulysses-cli awards show <award-id>
+  ```
+</Accordion>
+
+## Connections and datasets
+
+A **connection** links Ulysses to an external source, such as a project spreadsheet. Ulysses verifies access and runs sync jobs to keep the data current.
+
+Synced data lands in **datasets**, where you manage how it maps to projects, programs, and awards.
 
 ## Activity
 
-**Activity** is a recent change feed across the portfolio—useful for spotting what moved since you last looked.
+**Activity** is a feed of recent changes across your portfolio.
 
-```bash
-ulysses-cli activity list
-```
+<Accordion title="From the CLI">
+  ```bash
+  ulysses-cli activity list
+  ```
+</Accordion>
 
-## Surfaces
+## Ways to work
 
 | Surface | Best for |
 | --- | --- |
-| [Web app](https://app.tryulysses.com) | Day-to-day portfolio work and chat |
-| [CLI](/interfaces/cli) | Scripts, CI, and agent workflows |
-| [MCP](/interfaces/mcp) | Agent tools (coming soon) |
+| [Web app](/interfaces/web-app) | Day-to-day work and asking questions |
+| [CLI](/interfaces/cli) | Scripts, automation, and AI agents |
+| [MCP](/interfaces/mcp) | AI agent tools. Not yet available. |
 
-Both use the same authenticated workspace and the same underlying records.
+Every surface works against the same workspace and the same records.

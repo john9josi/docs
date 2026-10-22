@@ -1,64 +1,83 @@
 ---
-title: "Create a project"
-description: "Register a project from the CLI with title, ZIP code, and project type."
+title: "Create a project or program"
+description: "Add a capital project or a services program within Ulysses"
 ---
 
-Create a project in the active workspace from the terminal. This path is for users (and agents) who already completed [Quickstart](/quickstart) and have `project:write` on the tenant.
+## Before you start
 
-## Prerequisites
+- You're signed in. See the [Quickstart](/quickstart).
+- You have permission to create projects in your workspace.
 
-- CLI installed and signed in ([CLI](/interfaces/cli))
-- Correct workspace selected (`ulysses-cli auth whoami`)
-- Permission to create projects in that workspace
+<Tabs>
+  <Tab title="Web app">
+    <Steps>
+      <Step title="Open Projects">
+        In [app.tryulysses.com](https://app.tryulysses.com), go to **Projects**.
+      </Step>
+      <Step title="Start a new project">
+        Select **New project**.
+      </Step>
+      <Step title="Choose capital project or program">
+        Select whether this is a capital project or a service program.
+      </Step>
+      <Step title="Add details">
+        Enter the name, description, start and end dates, department, budget, kind, location, EERP/MUNIS number, and URL.
+      </Step>
+      <Step title="Set funding status">
+        Select the current funding status: fully funded, partially funded, or unfunded. Include how it's funded, or how you'd like to fund it.
+      </Step>
+      <Step title="Review and create">
+        Review your entries and select **Create**. Once created, you can add identifiers, update its status, or put it on hold.
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="CLI">
+    You also need `project:write` permission on the tenant.
 
-## 1. Confirm the workspace
+    <Steps>
+      <Step title="Confirm your workspace">
+        ```bash
+        ulysses-cli --output json auth whoami
+        ```
 
-```bash
-ulysses-cli --output json auth whoami
-```
+        To switch workspaces, run `auth contexts`, then `auth use <tenant-id>`.
+      </Step>
+      <Step title="Create the project">
+        ```bash
+        ulysses-cli --output json projects create \
+          --title "Bridge retrofit" \
+          --postal-code 94901 \
+          --project-type infrastructure \
+          --summary "Seismic work"
+        ```
 
-If you need a different tenant:
+        | Flag | Notes |
+        | --- | --- |
+        | `--title` | Required. |
+        | `--postal-code` | Required. A US ZIP code. Ulysses derives the state from it. |
+        | `--project-type` | Required. One of `infrastructure`, `childcare`, `workforce_development`, `housing`, `education`, `health`, `environment`, `arts_culture`, `public_safety`, or `other`. |
+        | `--summary` | Optional. |
 
-```bash
-ulysses-cli --output json auth contexts
-ulysses-cli --output json auth use <tenant-id>
-```
+        The project is added to your workspace's organization. The response includes `projectId`, `created: true`, and a `url` you can open in the web app.
+      </Step>
+      <Step title="Update fields (optional)">
+        `projects update` changes only the flags you pass. The title and project type can't be changed after creation.
 
-## 2. Create the project
+        ```bash
+        ulysses-cli --output json projects update <project-id> --summary "New description"
+        ulysses-cli --output json projects update <project-id> --federal-number FED-1001
+        ulysses-cli --output json projects update <project-id> --hold --hold-reason "Waiting on permits"
+        ```
 
-```bash
-ulysses-cli --output json projects create \
-  --title "Bridge retrofit" \
-  --postal-code 94901 \
-  --project-type infrastructure \
-  --summary "Seismic work"
-```
+        - `--summary-mode append` adds to the summary instead of replacing it.
+        - `--release-hold` clears a hold.
+        - Pass an empty value to `--federal-number`, `--state-award-number`, or `--cip-number` to clear it.
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
 
-| Flag | Notes |
-| --- | --- |
-| `--title` | Required |
-| `--postal-code` | Required US ZIP; gateway derives the state |
-| `--project-type` | One of `infrastructure`, `childcare`, `workforce_development`, `housing`, `education`, `health`, `environment`, `arts_culture`, `public_safety`, `other` |
-| `--summary` | Optional |
+## Next steps
 
-Create attaches the project to the tenant’s captured organization. There is no organization flag.
-
-A successful create returns `projectId`, `created: true`, and `url`. Open that URL in the app, or resolve it later with `links resolve project <project-id>`.
-
-## 3. (Optional) Update fields
-
-`projects update` changes only the flags you pass. Title and project type stay as they were at create time.
-
-```bash
-ulysses-cli --output json projects update <project-id> --summary "New description"
-ulysses-cli --output json projects update <project-id> --federal-number FED-1001
-ulysses-cli --output json projects update <project-id> --hold --hold-reason "Waiting on permits"
-```
-
-Use `--summary-mode append` to append to the summary, `--release-hold` to clear a hold, and a blank `--federal-number` / `--state-award-number` / `--cip-number` to clear those values.
-
-## What's next
-
-- [Match opportunities](/guides/match-opportunities) for a project
-- [CLI](/interfaces/cli)
-- [Core concepts](/concepts/overview)
+- [Match opportunities](/guides/match-opportunities) to your new project.
+- See every command in the [CLI reference](/interfaces/cli).

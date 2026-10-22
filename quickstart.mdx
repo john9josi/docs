@@ -1,92 +1,124 @@
 ---
 title: "Quickstart"
-description: "Install the CLI or open the app, sign in, and complete a first useful action in Ulysses."
+description: "Sign in to Ulysses and open your first project."
 ---
 
-Get from zero to a signed-in session that can read your workspace—reliably and on the path your team will use day to day.
+Takes about 5 minutes.
 
-You can start with the **CLI** (recommended for agents and scripts) or the **web app**. Both require an invited account for your organization.
+## Before you start
 
-<Note>
-  Prefer the app only? Skip to [Use the web app](#use-the-web-app). Prefer the terminal? Follow steps 1–4 below.
-</Note>
+- Find an invitation to your agency's workspace in your email inbox. If you don't have one, ask your workspace admin or email [support@tryulysses.com](mailto:support@tryulysses.com).
+- Ensure you have macOS, Linux, or Windows with network access to `app.tryulysses.com` and, for the CLI, `install.tryulysses.com`.
 
-## Prerequisites
+New to Ulysses? Use the **web app**. Writing scripts or working with an AI agent? Use the **CLI**.
 
-- An invitation or account for your organization
-- macOS, Linux, or Windows with a network path to `install.tryulysses.com` and `app.tryulysses.com`
-- For the CLI path: `curl` and a shell (the installer brings [uv](https://docs.astral.sh/uv/) if needed)
+<Tabs>
+  <Tab title="Web app">
+    <Steps>
+      <Step title="Sign in">
+        Open [app.tryulysses.com](https://app.tryulysses.com) and sign in with your organization's identity provider. If your agency doesn't use single sign-on, sign in with the email and password from your invitation.
+      </Step>
+      <Step title="Check your workspace">
+        Confirm you're in your agency's workspace. If you belong to more than one, switch to the right one.
 
-## 1. Install the CLI
+        <Note>
+          Don't see your agency's workspace? Make sure you accepted the invitation email, then email [support@tryulysses.com](mailto:support@tryulysses.com).
+        </Note>
+      </Step>
+      <Step title="Open a project">
+        Go to **Projects** and open a project or program. You'll see its department, budget, dates, links, funding status, and capital stack.
+      </Step>
+      <Step title="Ask a question">
+        Ask Ulysses a question about your portfolio, such as the funding status of a project. A good answer cites the project or award it's drawing from.
+      </Step>
+    </Steps>
 
-```bash
-curl -fsSL https://install.tryulysses.com/cli | sh
-```
+    You're set up. Continue to [Next steps](#next-steps).
+  </Tab>
+  <Tab title="CLI">
+    Use the CLI for scripts, automation, and AI agents. The installer adds [uv](https://docs.astral.sh/uv/) if it's missing.
 
-The script installs uv when missing, downloads the signed wheel from the install host, verifies the SHA-256 and release signature, then installs the `ulysses-cli` command.
+    <Steps>
+      <Step title="Install">
+        ```bash
+        curl -fsSL https://install.tryulysses.com/cli | sh
+        ulysses-cli --version
+        ```
 
-Confirm the install:
+        The installer downloads the signed release from `install.tryulysses.com`, verifies it, and installs `ulysses-cli`.
+      </Step>
+      <Step title="Sign in">
+        ```bash
+        ulysses-cli auth login
+        ulysses-cli auth whoami
+        ```
 
-```bash
-ulysses-cli --version
-```
+        Finish the device login in your browser. Tokens are stored in your OS keychain when available.
 
-Upgrade later with:
+        `auth whoami` returns something like:
 
-```bash
-ulysses-cli update
-```
+        ```json
+        {
+          "ok": true,
+          "result": {
+            "email": "you@example.com",
+            "tenantId": "tnt_9f2a1c",
+            "tenantName": "City of Example",
+            "role": "member"
+          }
+        }
+        ```
 
-Full detail: [CLI](/interfaces/cli).
+        <Note>
+          Sign-in failing, or no tenant showing up? Confirm you accepted your invitation email, then try `ulysses-cli auth login` again.
+        </Note>
+      </Step>
+      <Step title="Choose a workspace">
+        If you belong to more than one workspace, list them and pick one:
 
-## 2. Sign in
+        ```bash
+        ulysses-cli auth contexts
+        ulysses-cli auth use <tenant-id>
+        ```
+      </Step>
+      <Step title="List your projects">
+        ```bash
+        ulysses-cli projects list
+        ```
 
-```bash
-ulysses-cli auth login
-```
+        ```json
+        {
+          "ok": true,
+          "result": [
+            { "projectId": "prj_4k2j1", "title": "Bridge retrofit", "projectType": "infrastructure" },
+            { "projectId": "prj_7m3p9", "title": "Homelessness services", "projectType": "health" }
+          ]
+        }
+        ```
 
-Complete the device login in the browser. Tokens are stored in the OS keychain when available; profile metadata lives in `~/.ulysses/config`.
+        An empty `result` list is a successful read. It just means no projects exist in this workspace yet. Run `ulysses-cli` on its own to see every command.
+      </Step>
+    </Steps>
 
-Check the active principal:
+    You're set up. Continue to [Next steps](#next-steps).
+  </Tab>
+</Tabs>
 
-```bash
-ulysses-cli auth whoami
-```
+## Next steps
 
-If you belong to more than one workspace:
+<CardGroup cols={2}>
+  <Card title="Match opportunities" icon="magnifying-glass" href="/guides/match-opportunities">
+    See which funding opportunities fit a project.
+  </Card>
+  <Card title="Create a project or program" icon="folder-plus" href="/guides/create-a-project">
+    Add a project from the CLI.
+  </Card>
+  <Card title="Core concepts" icon="book" href="/concepts/overview">
+    How projects, opportunities, and awards fit together.
+  </Card>
+  <Card title="Use cases" icon="compass" href="/use-cases/overview">
+    Common goals and where to start.
+  </Card>
+</CardGroup>
 
-```bash
-ulysses-cli auth contexts
-ulysses-cli auth use <tenant-id>
-```
-
-See [CLI](/interfaces/cli).
-
-## 3. List something real
-
-Pick one read that matches your role:
-
-```bash
-ulysses-cli organizations list
-ulysses-cli projects list
-ulysses-cli opportunities list
-ulysses-cli awards list
-```
-
-Bare `ulysses-cli` prints the command tree. In a terminal you get human-readable output; pipes default to JSON. Force a format with `--output json` or `--output human` before the subcommand.
-
-## 4. (Optional) Use the web app
-
-1. Open [https://app.tryulysses.com](https://app.tryulysses.com) and sign in with your organization’s identity provider.
-2. Confirm you are in the correct workspace.
-3. Open projects, funding, or chat and complete one concrete task—for example, open a project or ask a question about your portfolio.
-
-## What's next
-
-- [Use cases](/use-cases/overview) — common goals after you are signed in
-- [Create a project](/guides/create-a-project) — first write from the CLI
-- [Match opportunities](/guides/match-opportunities) — inspect stored matches
-- [Interfaces](/interfaces/cli) — CLI now; MCP coming soon
-- [Concepts](/concepts/overview) — how projects, opportunities, and awards relate
-
-Need help? Email [support@tryulysses.com](mailto:support@tryulysses.com).
+Back to the [Introduction](/introduction).
