@@ -9,55 +9,21 @@ Projects and programs are the work and services that get funded. Opportunities a
 
 Your **workspace** is your agency's account in Ulysses, and the boundary for its data and access. It holds your team, user permissions, and department-level access. Everything you see belongs to the active workspace.
 
-<Accordion title="From the CLI">
-  ```bash
-  ulysses-cli auth contexts
-  ulysses-cli auth use <tenant-id>
-  ```
-</Accordion>
-
 ## Organizations
 
 **Organizations** are the agencies and entities your workspace works with.
-
-<Accordion title="From the CLI">
-  ```bash
-  ulysses-cli organizations list
-  ```
-</Accordion>
 
 ## Projects and programs
 
 **Projects and programs** are the capital work and public services you track. Each one has a department, budget, dates, links, funding status, and a capital stack: the mix of funding sources paying for it. Projects and programs can also carry federal, state, and CIP identifiers.
 
-<Accordion title="From the CLI">
-  ```bash
-  ulysses-cli projects list
-  ulysses-cli projects show <project-id>
-  ```
-</Accordion>
-
 ## Opportunities
 
 **Opportunities** are federal and state Notices of Funding Opportunity (NOFOs). Ulysses scores opportunities against your projects and programs and stores the matches. Each match has a score and the reasons behind it.
 
-<Accordion title="From the CLI">
-  ```bash
-  ulysses-cli opportunities list
-  ulysses-cli matches show <project-id>
-  ```
-</Accordion>
-
 ## Awards
 
 **Awards** are funding you've won, tied to the projects and programs they pay for. Ulysses tracks each award's lifecycle, including obligations, drawdowns, reimbursements, and clawback warnings. Awards can be added by hand or from a sync.
-
-<Accordion title="From the CLI">
-  ```bash
-  ulysses-cli awards list
-  ulysses-cli awards show <award-id>
-  ```
-</Accordion>
 
 ## Connections and datasets
 
@@ -69,12 +35,6 @@ Synced data lands in **datasets**, where you manage how it maps to projects, pro
 
 **Activity** is a feed of recent changes across your portfolio.
 
-<Accordion title="From the CLI">
-  ```bash
-  ulysses-cli activity list
-  ```
-</Accordion>
-
 ## Ways to work
 
 | Surface | Best for |
@@ -83,4 +43,4 @@ Synced data lands in **datasets**, where you manage how it maps to projects, pro
 | [CLI](/interfaces/cli) | Scripts, automation, and AI agents |
 | [MCP](/interfaces/mcp) | AI agent tools. Not yet available. |
 
-Every surface works against the same workspace and the same records.
+Every surface works against the same workspace and the same records. For the commands behind each record type, see the [CLI reference](/interfaces/cli).
